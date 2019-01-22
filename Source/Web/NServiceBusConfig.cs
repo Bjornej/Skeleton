@@ -1,10 +1,12 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Framework;
 using Microsoft.Extensions.Configuration;
 using NServiceBus;
 using System;
 using System.Linq;
 using System.Reflection;
+
 
 namespace Web
 {
@@ -76,8 +78,19 @@ namespace Web
                 }
             });
 
+
             var busInstance = Endpoint.Start(cfg).GetAwaiter().GetResult();
             container.Register(Component.For<IEndpointInstance>().Instance(busInstance).LifestyleSingleton());
+        }
+
+        public static void ConfigureCommandHandling(IWindsorContainer container)
+        {
+            container.Register(Component.For<ICommandHandlerFactory>().Instance(new CommandHandlerFactory(container)).LifeStyle.Singleton);
+
+            container.Register(Classes.FromThisAssembly()
+                               .BasedOn<ICommandHandler>()
+                               .WithServiceAllInterfaces()
+                               .LifestyleScoped());
         }
     }
 }

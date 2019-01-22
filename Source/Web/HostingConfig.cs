@@ -48,7 +48,7 @@ namespace Web
                               .Build();
 
                 NServiceBusConfig.ConfigureBus(container, (IConfiguration)host.Services.GetService(typeof(IConfiguration)));
-
+                NServiceBusConfig.ConfigureCommandHandling(container);
 
                 host.Run();
             }
