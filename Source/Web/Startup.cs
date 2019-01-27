@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Middleware;
 using Web.Windsor;
 
 namespace Web
@@ -55,6 +56,7 @@ namespace Web
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseMiddleware<WindsorScope>();
 
             app.UseMvc(routes =>
             {
