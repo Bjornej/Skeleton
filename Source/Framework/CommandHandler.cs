@@ -11,10 +11,7 @@ namespace Framework
         /// </summary>
         protected NServiceBus.IMessageHandlerContext Context { get; set; }
 
-        /// <summary>
-        ///     Istanza dell' endpoint 
-        /// </summary>
-        public NServiceBus.IEndpointInstance EndpointInstance { get; set; }
+        public IEventPublisher EventPublisher { get; set; }
 
         public abstract Task Apply(T command);
 
@@ -54,26 +51,7 @@ namespace Framework
             }
             else
             {
-                return EndpointInstance.Publish(evt, new NServiceBus.PublishOptions()
-                {
-                });
-            }
-        }
-
-        protected Task SendAsync(ICommand command)
-        {
-            if (Context != null)
-            {
-                return Context.Send(command, new NServiceBus.SendOptions()
-                {
-                    
-                });
-            }
-            else
-            {
-                return EndpointInstance.Send(command, new NServiceBus.SendOptions()
-                {
-                });
+                return EventPublisher.PublishAsync(evt);
             }
         }
     }
